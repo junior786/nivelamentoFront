@@ -13,11 +13,11 @@
     <section class="container">
         <div class="input-name">
             <label for="">Evento</label>
-            <input type="text" placeholder="evento...">
+            <input type="text" placeholder="evento..." id="event-name">
         </div>
         <div class="input-local">
             <label for="">Local</label>
-            <input type="text" id="local" placeholder="local...">
+            <input type="text" placeholder="local..." id="event-address">
         </div>
 
         <table>
@@ -42,6 +42,8 @@
     <table>
 
     </table>
+
+    <button class="btn-event" onclick="saveEvent()">Adicionar Evento</button>
 
     <table id="table">
         <thead>

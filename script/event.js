@@ -85,6 +85,40 @@ function codeRepeat(tr, tdId) {
     })
 }
 
+ function saveEvent(){
+    const name = document.querySelector('#event-name').value;
+    const address = document.querySelector('#event-address').value;
+    const guests = guestInEvent.map(x => {
+        return {id : parseInt(x)}
+    })
+    const eventBody = {
+        name,
+        address,
+        guests
+    }
+    console.log(eventBody)
+    saveEventBody(eventBody);
+ }
+
+ async function saveEventBody(value) {
+    const urlGuest = 'http://127.0.0.1:8080/api/event';
+   
+    await fetch(urlGuest, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: value.name, address: value.address, guests: value.guests})
+    })
+}
+
+function saveGuest() {
+    const valueGuest = document.querySelector('.input-guest');
+    save(valueGuest.value);
+}
+
+
 function createEvent(tr, tdId) {
     clearColor();
     tr.style.backgroundColor = '#f1f1f1';
