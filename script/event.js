@@ -55,7 +55,7 @@ async function createTableGuest() {
             tdName.textContent = data.name;
             tr.appendChild(tdId);
             tr.appendChild(tdName)
-            tr.onclick = function () { createEvent(tr, tdId) };
+            tr.onclick = function () { createEvent(tr, tdId.innerHTML) };
             table.appendChild(tr);
         }
     })
@@ -70,7 +70,7 @@ function createList(name) {
 function clearColor() {
     document.querySelectorAll('tr').forEach(x => {
         guestInEvent.forEach(guest => {
-            if (x.innerHTML === guest) {
+            if (x === guest) {
                 x.style.backgroundColor = "#F1F1F1F1"
             }
         })
@@ -79,7 +79,7 @@ function clearColor() {
 
 function codeRepeat(tr, tdId) {
     guestInEvent.forEach(x => {
-        if (x === tdId.innerHTML) {
+        if (x === tdId) {
             tr.style.backgroundColor = "transparent"
         }
     })
@@ -88,13 +88,13 @@ function codeRepeat(tr, tdId) {
 function createEvent(tr, tdId) {
     clearColor();
     tr.style.backgroundColor = '#f1f1f1';
-    const valid = guestInEvent.filter(guest => guest === tdId.innerHTML).length === 0;
+    const valid = guestInEvent.filter(guest => guest === tdId).length === 0;
     if (valid) {
-        guestInEvent.push(tdId.innerHTML);
+        guestInEvent.push(tdId);
         clearColor();
     }else {
         codeRepeat(tr, tdId);
-        guestInEvent = guestInEvent.filter(guest => guest !== tdId.innerHTML);
+        guestInEvent = guestInEvent.filter(guest => guest !== tdId);
     }
 }
 createTableGuest();
