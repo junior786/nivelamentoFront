@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivelamento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section class="container">
+        <div class="input-name">
+            <label for="">Evento</label>
+            <input type="text" placeholder="evento...">
+        </div>
+        <div class="input-local">
+            <label for="">Local</label>
+            <input type="text" id="local" placeholder="local...">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                </tr>
+            <tbody class="guest">
+
+            </tbody>
+            </thead>
+        </table>
+        <div class="form-guest">
+            <label for="">Nome</label> 
+            <input type="text" class="input-guest">
+            <button class="add-guest" onclick="saveGuest()">Adicionar</button>
+        </div>
+       
+    </section>
+   
+    <table>
+
+    </table>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Evento</th>
+                <th>Local</th>
+                <th>Convidados</th>
+            </tr>
+        </thead>
+        <tbody class="events">
+
+        </tbody>
+    </table>
+    <script src="script/event.js"></script>
+    <script src="script/guest.js"></script>
+
+</body>
+
+</html>
