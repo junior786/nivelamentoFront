@@ -15,11 +15,10 @@ async function save(value) {
 function saveGuest() {
     const valueGuest = document.querySelector('.input-guest');
     save(valueGuest.value);
-    console.log(guests);
 }
 
 
-const addRowGuest = (guest) => { 
+const addRowGuest = (guest) => {
     if (guest){
         const table = document.querySelector('.guest');
         const tr = document.createElement('tr');
@@ -29,8 +28,7 @@ const addRowGuest = (guest) => {
         tdName.textContent = guest.name;
         tr.appendChild(tdId);
         tr.appendChild(tdName)
-        tr.onclick = function () { createEvent(tr, tdId) };
+        tr.onclick = function () { selectGuest(tr, tdId.innerHTML, tdName.innerHTML) };
         table.appendChild(tr);
-    
     }
 }

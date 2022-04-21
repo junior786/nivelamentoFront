@@ -3,60 +3,61 @@ const events = [];
 const guests = [];
 var guestInEvent = [];
 
-async function getApi() {
+async function getApiEvent() {
     const urlEvent = 'http://127.0.0.1:8080/api/event';
-    const urlGuest = 'http://127.0.0.1:8080/api/guest';
-    
     const options = {
         method: 'GET',
     }
     await fetch(urlEvent, options)
         .then(response => response.json())
         .then(json => json.forEach(x => events.push(x)))
+}
 
+async function getApiGuest() {
+    const urlGuest = 'http://127.0.0.1:8080/api/guest';
+    const options = {
+        method: 'GET',
+    }
     await fetch(urlGuest, options)
         .then(response => response.json())
         .then(json => json.forEach(x => guests.push(x)))
+    console.log(events);
 }
 
 
-async function createTable() {
-    await getApi();
-    const table = document.querySelector('.events');
 
-    events.forEach(data => {
+function createRowEvent(data) {
+    console.log('EVENT', data);
+    const table = document.querySelector('.events');
+    const tr = document.createElement('tr');
+    const tdNome = document.createElement('td');
+    const tdEndereco = document.createElement('td');
+    const ol = document.createElement('ul');
+    tdNome.textContent = data.name;
+    tdEndereco.textContent = data.address;
+    tr.appendChild(tdNome);
+    tr.appendChild(tdEndereco);
+    data.guests.forEach(guest => {
+        ol.appendChild(createList(guest.name));
+    })
+    tr.appendChild(ol);
+    table.appendChild(tr);
+}
+
+async function createTable() {
+   await getApiEvent();
+    console.log(events.length)
+    events.map(data => {
         if (!!data) {
-            const tr = document.createElement('tr');
-            const tdNome = document.createElement('td');
-            const tdEndereco = document.createElement('td');
-            const ol = document.createElement('ul');
-            tdNome.textContent = data.name;
-            tdEndereco.textContent = data.address;
-            tr.appendChild(tdNome);
-            tr.appendChild(tdEndereco);
-            data.guests.forEach(guest => {
-                ol.appendChild(createList(guest.name));
-            })
-            tr.appendChild(ol);
-            table.appendChild(tr);
+            createRowEvent(data);
         }
     })
 }
 async function createTableGuest() {
-    await getApi();
-    const table = document.querySelector('.guest');
-
+    await getApiGuest();
     guests.forEach(data => {
         if (!!data) {
-            const tr = document.createElement('tr');
-            const tdId = document.createElement('td');
-            const tdName = document.createElement('td');
-            tdId.textContent = data.id;
-            tdName.textContent = data.name;
-            tr.appendChild(tdId);
-            tr.appendChild(tdName)
-            tr.onclick = function () { createEvent(tr, tdId.innerHTML) };
-            table.appendChild(tr);
+            addRowGuest(data);
         }
     })
 }
@@ -70,7 +71,7 @@ function createList(name) {
 function clearColor() {
     document.querySelectorAll('tr').forEach(x => {
         guestInEvent.forEach(guest => {
-            if (x === guest) {
+            if (x === guest.id) {
                 x.style.backgroundColor = "#F1F1F1F1"
             }
         })
@@ -79,37 +80,38 @@ function clearColor() {
 
 function codeRepeat(tr, tdId) {
     guestInEvent.forEach(x => {
-        if (x === tdId) {
+        if (x.id === tdId) {
             tr.style.backgroundColor = "transparent"
         }
     })
 }
 
- function saveEvent(){
+function saveEvent() {
     const name = document.querySelector('#event-name').value;
     const address = document.querySelector('#event-address').value;
     const guests = guestInEvent.map(x => {
-        return {id : parseInt(x)}
+        return { id: parseInt(x.id), name: x.name }
     })
     const eventBody = {
         name,
         address,
         guests
     }
-    console.log(eventBody)
+    console.log('saveEvent', guests)
+    createRowEvent(eventBody);
     saveEventBody(eventBody);
- }
+}
 
- async function saveEventBody(value) {
+async function saveEventBody(value) {
     const urlGuest = 'http://127.0.0.1:8080/api/event';
-   
+    console.log('SaveEvent', saveEventBody)
     await fetch(urlGuest, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: value.name, address: value.address, guests: value.guests})
+        body: JSON.stringify({ name: value.name, address: value.address, guests: value.guests })
     })
 }
 
@@ -119,17 +121,24 @@ function saveGuest() {
 }
 
 
-function createEvent(tr, tdId) {
+function selectGuest(tr, tdId, tdName) {
     clearColor();
     tr.style.backgroundColor = '#f1f1f1';
-    const valid = guestInEvent.filter(guest => guest === tdId).length === 0;
+    const valid = guestInEvent.filter(guest => guest.id === tdId).length === 0;
     if (valid) {
-        guestInEvent.push(tdId);
+        const body = {
+            id: tdId, 
+            name: tdName
+        }
+        guestInEvent.push(body);
+        console.log(guestInEvent)
         clearColor();
-    }else {
+    } else {
         codeRepeat(tr, tdId);
-        guestInEvent = guestInEvent.filter(guest => guest !== tdId);
+        console.log('else', guestInEvent)
+        guestInEvent = guestInEvent.filter(guest => guest.id !== tdId);
     }
 }
+
 createTableGuest();
 createTable();
